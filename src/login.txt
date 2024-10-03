@@ -1,0 +1,48 @@
+import javax.swing.*;  // Thư viện tạo giao diện đồ họa Swing
+import java.awt.*;     // Thư viện hỗ trợ bố cục (layout)
+import java.io.FileWriter;  // Thư viện hỗ trợ ghi tệp
+import java.io.IOException; // Thư viện hỗ trợ xử lý lỗi
+
+public class Main {
+    public static void main(String[] args) {
+        // Bước 1: Tạo JPanel để chứa các trường nhập liệu
+        JPanel panel = new JPanel(new GridLayout(2, 2));  // Giao diện có 2 hàng, 2 cột
+
+        // Tạo các thành phần của giao diện
+        JLabel userLabel = new JLabel("Username:");  // Nhãn "Username"
+        JTextField usernameField = new JTextField();  // Ô nhập cho "Username"
+        JLabel passLabel = new JLabel("Password:");  // Nhãn "Password"
+        JPasswordField passwordField = new JPasswordField();  // Ô nhập cho "Password"
+
+        // Thêm các thành phần vào panel
+        panel.add(userLabel);
+        panel.add(usernameField);
+        panel.add(passLabel);
+        panel.add(passwordField);
+
+        // Bước 2: Hiển thị hộp thoại đăng nhập
+        int result = JOptionPane.showConfirmDialog(null, panel, "Login", JOptionPane.OK_CANCEL_OPTION);
+
+        // Kiểm tra nếu người dùng nhấn OK (chọn đăng nhập)
+        if (result == JOptionPane.OK_OPTION) {
+            String username = usernameField.getText();  // Lấy giá trị từ ô "Username"
+            String password = new String(passwordField.getPassword());  // Lấy giá trị từ ô "Password"
+
+            // Kiểm tra nếu username hoặc password bị trống
+            if (username.isEmpty() || password.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin!");  // Hiển thị thông báo lỗi
+            } else {
+                // Nếu thông tin không trống, ghi dữ liệu vào tệp login.txt
+                try {
+                    FileWriter writer = new FileWriter("login.txt", true);  // Mở tệp và ghi thêm (append)
+                    writer.write("Username: " + username + ", Password: " + password + "\n");  // Ghi vào file
+                    writer.close();  // Đóng tệp sau khi ghi
+                    JOptionPane.showMessageDialog(null, "Thông tin đăng nhập đã được lưu thành công!");  // Thông báo thành công
+                } catch (IOException e) {
+                    // Xử lý lỗi nếu không thể ghi tệp
+                    JOptionPane.showMessageDialog(null, "Lỗi khi ghi tệp: " + e.getMessage());
+                }
+            }
+        }
+    }
+}

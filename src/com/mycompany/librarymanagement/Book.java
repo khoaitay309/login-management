@@ -1,25 +1,37 @@
 package com.mycompany.librarymanagement;
 
 public class Book {
-    private String title;
-    private String author;
-    private String ISBN;
-    private String status;
+    private String tenSach;
+    private String maSach;
 
-    public Book(String title, String author, String ISBN) {
-        this.title = title;
-        this.author = author;
-        this.ISBN = ISBN;
-        this.status = "available";
+    public Book(String tenSach, String maSach) {
+        // Kiểm tra tính hợp lệ của tên sách và mã sách
+        if (tenSach == null || tenSach.isEmpty()) {
+            throw new IllegalArgumentException("Tên sách không được để trống.");
+        }
+        if (maSach == null || maSach.isEmpty()) {
+            throw new IllegalArgumentException("Mã sách không được để trống.");
+        }
+        this.tenSach = tenSach;
+        this.maSach = maSach;
     }
 
-    public void checkOut() {
-        this.status = "checked out";
+    public String getMaSach() {
+        return maSach;
     }
 
-    public void returnBook() {
-        this.status = "available";
+    public String getTenSach() {
+        return tenSach;
     }
 
-    // Getter và Setter khác (nếu cần)
+    public boolean isBorrowed(){
+        return true;
+    }
+
+    public void checkOut(){
+
+    };
+    public void returnBook(){
+
+    };
 }

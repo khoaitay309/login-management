@@ -1,16 +1,15 @@
-package com.mycompany.librarymanagement;
+import com.mycompany.librarymanagement.Book;
+import com.mycompany.librarymanagement.Library;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        // Thiết lập tên đăng nhập và mật khẩu mặc định
-        String correctUsername = "admin";
-        String correctPassword = "admin";
-
-        // Tạo JPanel chứa 2 trường nhập tên đăng nhập và mật khẩu
+        // Giao diện đăng nhập
         JPanel panel = new JPanel(new GridLayout(2, 2));
+
         JLabel userLabel = new JLabel("Username:");
         JTextField usernameField = new JTextField();
         JLabel passLabel = new JLabel("Password:");
@@ -22,41 +21,61 @@ public class Main {
         panel.add(passwordField);
 
         // Hiển thị hộp thoại đăng nhập
-        int result = JOptionPane.showConfirmDialog(null, panel, "Login", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        int result = JOptionPane.showConfirmDialog(null, panel, "Login", JOptionPane.OK_CANCEL_OPTION);
 
         if (result == JOptionPane.OK_OPTION) {
-            String enteredUsername = usernameField.getText();
-            String enteredPassword = new String(passwordField.getPassword());
+            String username = usernameField.getText();
+            String password = new String(passwordField.getPassword());
 
-            // Kiểm tra tên đăng nhập và mật khẩu
-            if (correctUsername.equals(enteredUsername) && correctPassword.equals(enteredPassword)) {
-                // Nếu đúng, tiếp tục chương trình
-                Library library = new Library("Central Library", "123 Library Street");
-                Librarian librarian = new Librarian("EMP123");
+            // Giả sử username và password là "admin"
+            if ("admin".equals(username) && "admin".equals(password)) {
+                JOptionPane.showMessageDialog(null, "Đăng nhập thành công!");
 
-                Book book1 = new Book("Java Programming", "Author A", "ISBN12345");
+                // Nếu đăng nhập thành công, bắt đầu quản lý thư viện
+                Scanner scanner = new Scanner(System.in);
+                Library library = new Library(); // Khởi tạo thư viện
 
-                // Thêm các thành viên mới với tên mong muốn
-                Member member1 = new Member("MEM001", "Le Manh Dung", "dung@example.com");
-                Member member2 = new Member("MEM002", "Nguyen Van Hieu", "hieu@example.com");
+                try {
+                    // Nhập số lượng sách
+                    System.out.println("Nhập số sách muốn thêm vào thư viện:");
+                    int soSach = Integer.parseInt(scanner.nextLine());
 
-                library.addBook(book1);
-                library.registerMember(member1);
-                library.registerMember(member2);
+                    // Vòng lặp để thêm từng sách vào thư viện
+                    for (int i = 0; i < soSach; i++) {
+                        System.out.println("Nhập tên sách:");
+                        String tenSach = scanner.nextLine();
+                        System.out.println("Nhập mã sách:");
+                        String maSach = scanner.nextLine();
 
-                // Hiển thị thông tin thư viện và các thành viên
-                JOptionPane.showMessageDialog(null,
-                        "Login successful!\n\n" +
-                                "Library name: " + library.getName() +
-                                "\nMember 1 name: " + member1.getName() +
-                                "\nMember 2 name: " + member2.getName());
+                        // Kiểm tra xem tên sách và mã sách có bị trống không
+                        if (tenSach.isEmpty() || maSach.isEmpty()) {
+                            throw new IllegalArgumentException("Tên sách và mã sách không được để trống.");
+                        }
+
+                        // Tạo đối tượng sách và thêm vào thư viện
+                        Book book = new Book(tenSach, maSach);
+                        library.addBook(book);
+                    }
+
+                    // Tìm kiếm sách theo mã
+                    System.out.println("Nhập mã sách để tìm:");
+                    String maTim = scanner.nextLine();
+                    Book foundBook = library.findBookById(maTim); // Tìm sách theo mã
+                    System.out.println("Sách tìm thấy: " + foundBook.getTenSach());
+
+                } catch (NumberFormatException e) {
+                    System.out.println("Lỗi: Vui lòng nhập một số nguyên hợp lệ cho số lượng sách.");
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Lỗi: " + e.getMessage());
+                } catch (Exception e) {
+                    System.out.println("Lỗi không xác định: " + e.getMessage());
+                } finally {
+                    scanner.close(); // Đảm bảo scanner được đóng
+                }
+
             } else {
-                // Nếu sai, thông báo lỗi
-                JOptionPane.showMessageDialog(null, "Login failed! Incorrect username or password.");
+                JOptionPane.showMessageDialog(null, "Tên đăng nhập hoặc mật khẩu không đúng.");
             }
-        } else {
-            // Nếu người dùng nhấn Cancel hoặc đóng hộp thoại
-            JOptionPane.showMessageDialog(null, "Login canceled.");
         }
     }
 }
